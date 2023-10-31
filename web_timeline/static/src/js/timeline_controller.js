@@ -269,6 +269,10 @@ odoo.define("web_timeline.TimelineController", function (require) {
                     .add(1, "hours")
                     .format("YYYY-MM-DD HH:mm:ss");
             }
+            if (this.date_delay && this.date_start && this.date_stop && item.end) {
+                default_context["default_".concat(this.date_delay)] =
+                    (moment(item.end) - moment(item.start)) / 3600000;
+            }
             if (item.group > 0) {
                 default_context["default_".concat(this.renderer.last_group_bys[0])] =
                     item.group;
@@ -276,7 +280,7 @@ odoo.define("web_timeline.TimelineController", function (require) {
             // Show popup
             new dialogs.FormViewDialog(this, {
                 res_model: this.model.modelName,
-                res_id: null,
+                res_id: false,
                 context: _.extend(default_context, this.context),
                 view_id: Number(this.open_popup_action),
                 on_saved: (record) => {
